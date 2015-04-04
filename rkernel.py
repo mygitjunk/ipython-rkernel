@@ -18,6 +18,7 @@ ip.run_line_magic('config', 'Application.verbose_crash=True')
 old_run_cell = InteractiveShell.run_cell
 
 def run_cell(self, raw_cell, **kw):
-    return old_run_cell(self, '%%R\n' + raw_cell, **kw)
+    old_run_cell(self, '%%R\n..RROUT.. <- capture.output({\n' + raw_cell + '\n})', **kw)
+    return old_run_cell(self, '__RROUT__ = %R ..RROUT..\nfor line in __RROUT__:\n  print(line)\n', **kw)
 
 InteractiveShell.run_cell = run_cell
